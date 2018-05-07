@@ -19,6 +19,7 @@
 /* Begin PBXFileReference section */
 		319EE290F6FF38B3321EDDB9 /* Pods-Todolist-firebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todolist-firebase.release.xcconfig"; path = "Pods/Target Support Files/Pods-Todolist-firebase/Pods-Todolist-firebase.release.xcconfig"; sourceTree = "<group>"; };
 		9C472BAE20A09B8400B0492D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9C472BB120A09EE100B0492D /* Base */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Base; path = Base.lproj/LoginViewController.swift; sourceTree = "<group>"; };
 		9C6949D220A090FB00C33404 /* Todolist-firebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Todolist-firebase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C6949D520A090FB00C33404 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9C6949D720A090FB00C33404 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -74,6 +75,7 @@
 			children = (
 				9C472BAE20A09B8400B0492D /* GoogleService-Info.plist */,
 				9C6949D520A090FB00C33404 /* AppDelegate.swift */,
+				9C472BB020A09EE100B0492D /* LoginViewController.swift */,
 				9C6949D720A090FB00C33404 /* ViewController.swift */,
 				9C6949D920A090FB00C33404 /* Main.storyboard */,
 				9C6949DC20A090FB00C33404 /* Assets.xcassets */,
@@ -223,6 +225,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		9C472BB020A09EE100B0492D /* LoginViewController.swift */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9C472BB120A09EE100B0492D /* Base */,
+			);
+			name = LoginViewController.swift;
+			sourceTree = "<group>";
+		};
 		9C6949D920A090FB00C33404 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

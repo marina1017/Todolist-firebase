@@ -17,6 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // 起動した直後に走る関数
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        //ストーリーボードを使わない場合は、このwindowを自分で作る必要がある。
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        //アプリが起動した時に一番最初に表示されたいViewControllerのインスタンスをつくる
+        let initialViewController = ViewController()
+        
+        //アプリが立ち上がって一番最初に表示される画面をrootViewControllerという
+        //windowのプロパティであるrootViewControllerに、表示させたいUIViewControllerを設定する
+        self.window?.rootViewController = initialViewController
+        
+        //現在のウィンドウを表示し、それを同じレベルまたはそれ以下の他のすべてのウィンドウの前に置く便利な関数。
+        self.window?.makeKeyAndVisible()
         
         // Firebaseを使うのに必要（チュートリアルで入れるように言われる）
         FirebaseApp.configure()
