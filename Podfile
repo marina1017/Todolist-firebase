@@ -1,4 +1,4 @@
-# Uncomment the next line to define a global platform for your project
+#Uncomment the next line to define a global platform for your project
 platform :ios, '10.0'
 
 target 'Todolist-firebase' do
@@ -8,5 +8,5 @@ target 'Todolist-firebase' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'SnapKit', '~> 4.0.0'
-
+  pod 'SwiftLint'
 end

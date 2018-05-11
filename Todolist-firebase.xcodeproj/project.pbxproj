@@ -106,6 +106,7 @@
 				9C6949D020A090FB00C33404 /* Resources */,
 				9C06CDFFD391D4A5ED956213 /* [CP] Embed Pods Frameworks */,
 				95776C0C0BD5359ABE6E9BC9 /* [CP] Copy Pods Resources */,
+				9C472BB220A5902700B0492D /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -194,6 +195,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Todolist-firebase/Pods-Todolist-firebase-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		9C472BB220A5902700B0492D /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which \"${PODS_ROOT}/SwiftLint/swiftlint\" >/dev/null; then\n${PODS_ROOT}/SwiftLint/swiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
 		};
 		F85702B1678EB594747EDEAC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
