@@ -11,8 +11,8 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
-    @IBOutlet weak var emailField: UITextField!
-    @IBOutlet weak var passwordField: UITextField!
+    weak var emailField: UITextField!
+    weak var passwordField: UITextField!
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
