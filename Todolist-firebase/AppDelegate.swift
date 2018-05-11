@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //ストーリーボードを使わない場合は、このwindowを自分で作る必要がある。
         self.window = UIWindow(frame: UIScreen.main.bounds)
         //アプリが起動した時に一番最初に表示されたいViewControllerのインスタンスをつくる
-        let initialViewController = ViewController()
+        let initialViewController = LoginViewController()
         
         //アプリが立ち上がって一番最初に表示される画面をrootViewControllerという
         //windowのプロパティであるrootViewControllerに、表示させたいUIViewControllerを設定する
