@@ -39,6 +39,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let button = UIButton()
         button.backgroundColor = UIColor.blue
         button.setTitle("ログイン", for: UIControlState.normal)
+        button.addTarget(self,
+                         action: #selector(LoginViewController.loginButtonTapped(sender:)),
+                         for: .touchUpInside)
         return button
     }()
     
@@ -70,10 +73,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        //FIRAuthは→Authにする
+//        if let _ = Auth.auth().currentUser {
+//            self.signIn()
+//        }
 
         //Appdelegateから遷移する時背景色が必要
         self.view.backgroundColor = UIColor.white
-        
         self.stackView.addArrangedSubview(label)
         self.stackView.addArrangedSubview(signUpButton)
         // Delegateを自身に設定する
@@ -81,8 +87,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Delegateを自身に設定する
         self.passwordField.delegate = self
 
-        
-        
         // Viewに追加する
         self.view.addSubview(mailField)
         mailField.snp.makeConstraints { (make) -> Void in
@@ -121,6 +125,42 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    @objc func loginButtonTapped(sender: AnyObject) {
+        let email = self.mailField.text
+        let password = self.passwordField.text
+        Auth.auth().signIn(withEmail: email!, password: password!, completion: { (user, error) in
+            guard let _ = user else {
+                if let error = error {
+                    if let errCode = AuthErrorCode(rawValue: error._code) {
+                        //ここ公式と異なる 参考(https://code.i-harness.com/ja/q/23b70bf)
+                        switch errCode {
+                        case .invalidEmail:
+                            self.showAlert("User account not found. Try registering")
+                        case .wrongPassword:
+                            self.showAlert("Incorrect username/password combination")
+                        default:
+                            self.showAlert("Error:\(error.localizedDescription)")
+                        }
+                    }
+                    return
+                }
+                //このreturnがいる
+                return assertionFailure("user and error are nil")
+            }
+            self.signIn()
+        })
+    }
+    
+    func showAlert(_ message: String) {
+        let alertController = UIAlertController(title: "To Do App", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func signIn() {
+        print("signIn")
+    }
+    
     @objc func buttonTapped(sender : AnyObject) {
         let signUpViewController = SignUpViewController()
         self.present(signUpViewController, animated: true, completion: nil)
@@ -131,7 +171,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    
 }
-
