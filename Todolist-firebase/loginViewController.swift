@@ -8,70 +8,80 @@
 
 import UIKit
 import SnapKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.view.backgroundColor = UIColor.white
+    let mailField: UITextField = {
+        //インスタンス作成
         let mailField = UITextField()
         // 表示する文字を代入する.
         mailField.placeholder = "mailField"
-        // Delegateを自身に設定する
-        mailField.delegate = self
         // 枠を表示する.
         mailField.borderStyle = .roundedRect
         // クリアボタンを追加.
         mailField.clearButtonMode = .whileEditing
-        
+        return mailField
+    }()
+    
+    let passwordField: UITextField = {
+        //インスタンス作成
         let passwordField = UITextField()
         // 表示する文字を代入する.
         passwordField.placeholder = "pwField"
-        // Delegateを自身に設定する
-        passwordField.delegate = self
         // 枠を表示する.
         passwordField.borderStyle = .roundedRect
         // クリアボタンを追加.
         passwordField.clearButtonMode = .whileEditing
-        
-        let loginButton: UIButton = {
-            let button = UIButton()
-            button.backgroundColor = UIColor.blue
-            button.setTitle("ログイン", for: UIControlState.normal)
-            return button
-        }()
-        
-        let label: UILabel = {
-            let label = UILabel()
-            label.text = "アカウントを持っていない場合"
-            return label
-        }()
-        
-        let signUpButton: UIButton = {
-            let button = UIButton()
-            //button.backgroundColor = UIColor.blue
-            button.setTitle("登録", for: UIControlState.normal)
-            button.setTitleColor(UIColor.blue, for: UIControlState.normal)
-            // タップされたときのaction
-            button.addTarget(self,
-                             action: #selector(LoginViewController.buttonTapped(sender:)),
-                             for: .touchUpInside)
-            return button
-            
-        }()
-        
-        let stackView: UIStackView = {
-            let stackView = UIStackView()
-            stackView.axis = .horizontal
-            //stackView.distribution = .fill
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            return stackView
-        }()
-        
-        stackView.addArrangedSubview(label)
-        stackView.addArrangedSubview(signUpButton)
+        return passwordField
+    }()
+    
+    let loginButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.blue
+        button.setTitle("ログイン", for: UIControlState.normal)
+        return button
+    }()
+    
+    let label: UILabel = {
+        let label = UILabel()
+        label.text = "アカウントを持っていない場合"
+        return label
+    }()
+    let signUpButton: UIButton = {
+        let button = UIButton()
+        //button.backgroundColor = UIColor.blue
+        button.setTitle("登録", for: UIControlState.normal)
+        button.setTitleColor(UIColor.blue, for: UIControlState.normal)
+        // タップされたときのaction
+        button.addTarget(self,
+                         action: #selector(LoginViewController.buttonTapped(sender:)),
+                         for: .touchUpInside)
+        return button
+    }()
+    
+    let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = 10
+        return stackView
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        //Appdelegateから遷移する時背景色が必要
+        self.view.backgroundColor = UIColor.white
+        
+        self.stackView.addArrangedSubview(label)
+        self.stackView.addArrangedSubview(signUpButton)
+        // Delegateを自身に設定する
+        self.mailField.delegate = self
+        // Delegateを自身に設定する
+        self.passwordField.delegate = self
+
+        
         
         // Viewに追加する
         self.view.addSubview(mailField)
