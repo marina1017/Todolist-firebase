@@ -159,8 +159,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func signIn() {
         print("signIn")
-        let signUpViewController = ListViewController()
-        self.present(signUpViewController, animated: true, completion: nil)
+        let listViewController = ListViewController()
+        //UINavigationControllerにrootViewControllerにしたい、viewControllerを入れてインスタンスを作成
+        let navigationController = UINavigationController(rootViewController: listViewController)
+        self.present(navigationController, animated: true, completion: nil)
     }
     
     @objc func buttonTapped(sender : AnyObject) {
