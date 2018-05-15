@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C31BC6220A883E000BE7DBB /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C31BC6120A883E000BE7DBB /* ListViewController.swift */; };
+		9C31BC6420AB129600BE7DBB /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C31BC6320AB129600BE7DBB /* Item.swift */; };
 		9C472BAF20A09B8500B0492D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C472BAE20A09B8400B0492D /* GoogleService-Info.plist */; };
 		9C472BB420A5C4F900B0492D /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C472BB320A5C4F900B0492D /* SignUpViewController.swift */; };
 		9C6949D620A090FB00C33404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6949D520A090FB00C33404 /* AppDelegate.swift */; };
@@ -19,6 +21,8 @@
 
 /* Begin PBXFileReference section */
 		319EE290F6FF38B3321EDDB9 /* Pods-Todolist-firebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todolist-firebase.release.xcconfig"; path = "Pods/Target Support Files/Pods-Todolist-firebase/Pods-Todolist-firebase.release.xcconfig"; sourceTree = "<group>"; };
+		9C31BC6120A883E000BE7DBB /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		9C31BC6320AB129600BE7DBB /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		9C472BAE20A09B8400B0492D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C472BB320A5C4F900B0492D /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		9C6949D220A090FB00C33404 /* Todolist-firebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Todolist-firebase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,6 +82,8 @@
 				9C6949D520A090FB00C33404 /* AppDelegate.swift */,
 				9C6949D720A090FB00C33404 /* loginViewController.swift */,
 				9C472BB320A5C4F900B0492D /* SignUpViewController.swift */,
+				9C31BC6120A883E000BE7DBB /* ListViewController.swift */,
+				9C31BC6320AB129600BE7DBB /* Item.swift */,
 				9C6949D920A090FB00C33404 /* Main.storyboard */,
 				9C6949DC20A090FB00C33404 /* Assets.xcassets */,
 				9C6949DE20A090FB00C33404 /* LaunchScreen.storyboard */,
@@ -233,8 +239,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C31BC6420AB129600BE7DBB /* Item.swift in Sources */,
 				9C6949D820A090FB00C33404 /* loginViewController.swift in Sources */,
 				9C6949D620A090FB00C33404 /* AppDelegate.swift in Sources */,
+				9C31BC6220A883E000BE7DBB /* ListViewController.swift in Sources */,
 				9C472BB420A5C4F900B0492D /* SignUpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

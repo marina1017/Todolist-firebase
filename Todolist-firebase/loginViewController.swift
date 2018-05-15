@@ -159,6 +159,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func signIn() {
         print("signIn")
+        let signUpViewController = ListViewController()
+        self.present(signUpViewController, animated: true, completion: nil)
     }
     
     @objc func buttonTapped(sender : AnyObject) {
