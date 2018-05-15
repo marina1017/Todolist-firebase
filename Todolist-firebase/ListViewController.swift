@@ -96,7 +96,7 @@ class ListViewController: UIViewController {
     }
     
     deinit {
-        ref.child("users/\(self.user.uid)/items").removeObserver(withHandle: databaseHandle)
+        //ref.child("users/\(self.user.uid)/items").removeObserver(withHandle: databaseHandle)
     }
 }
 

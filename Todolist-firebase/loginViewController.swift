@@ -74,9 +74,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         //FIRAuthは→Authにする
-//        if let _ = Auth.auth().currentUser {
-//            self.signIn()
-//        }
+        
+        if Auth.auth().currentUser != nil {
+            self.signIn()
+        } else {
+            
+        }
 
         //Appdelegateから遷移する時背景色が必要
         self.view.backgroundColor = UIColor.white
