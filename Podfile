@@ -8,6 +8,7 @@ target 'Todolist-firebase' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'Firebase/Core'
+  pod 'Firebase/Performance'
   pod 'Firebase/Firestore’
   pod 'SnapKit', '~> 4.0.0'
   pod 'SwiftLint'
