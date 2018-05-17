@@ -23,14 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         //アプリが起動した時に一番最初に表示されたいViewControllerのインスタンスをつくる
         let initialViewController = LoginViewController()
-        
         //アプリが立ち上がって一番最初に表示される画面をrootViewControllerという
         //windowのプロパティであるrootViewControllerに、表示させたいUIViewControllerを設定する
         self.window?.rootViewController = initialViewController
-        
         //現在のウィンドウを表示し、それを同じレベルまたはそれ以下の他のすべてのウィンドウの前に置く便利な関数。
         self.window?.makeKeyAndVisible()
-        
         return true
     }
     //アプリケーションがアクティブな状態にになる直前

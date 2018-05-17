@@ -40,6 +40,8 @@ class ListViewController: UIViewController {
         tableView.rowHeight = 100
         tableView.delegate = self
         tableView.dataSource = self
+        //NSStrignFromClassはクラスの名前をStringで返してくれる
+        tableView.register(ListTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(ListTableViewCell.self))
         self.view.addSubview(tableView)
     }
     
@@ -115,10 +117,15 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     //列ごとに表示するセルを決めるデリゲートメソッド
     //UITableViewDataSource は主に Table View が表示するデータを与えるものです。
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(ListTableViewCell.self), for: indexPath) as? ListTableViewCell else {
+            fatalError("The dequeued cell is not instance of MealTableViewCell.")
+        }
+
         let item = items[indexPath.row]
-        cell.textLabel?.text = item.title
+        cell.nameLabel.text = item.title
+        
         return cell
+
     }
     
     //TableViewの条件付き編集をサポートする関数　指定した項目を編集可能にしたい場合はtrueを返す
