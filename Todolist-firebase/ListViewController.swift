@@ -37,9 +37,10 @@ class ListViewController: UIViewController {
     func initializeTableView(){
         //テーブルビュー
         tableView = UITableView(frame: self.view.frame, style: .plain)
-        tableView.rowHeight = 100
         tableView.delegate = self
         tableView.dataSource = self
+        //tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = 100
         //NSStrignFromClassはクラスの名前をStringで返してくれる
         tableView.register(ListTableViewCell.self, forCellReuseIdentifier: NSStringFromClass(ListTableViewCell.self))
         self.view.addSubview(tableView)

@@ -37,7 +37,7 @@ class ListTableViewCell: UITableViewCell {
             make.top.equalTo(self).offset(20)
             make.left.equalTo(self).inset(20)
             make.right.equalTo(self).inset(20)
-            make.height.equalTo(40)
+            make.height.equalTo(20)
         }
         
     }
