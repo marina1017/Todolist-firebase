@@ -11,6 +11,7 @@ import SnapKit
 import FirebaseAuth
 
 class SignUpViewController: UIViewController, UITextFieldDelegate {
+    var authModel = AuthModel()
     
     let mailField: UITextField = {
         //インスタンス作成
@@ -33,6 +34,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         passwordField.borderStyle = .roundedRect
         // クリアボタンを追加.
         passwordField.clearButtonMode = .whileEditing
+        // パスワードフィールドを隠す
+        passwordField.isSecureTextEntry = true
         return passwordField
     }()
     
@@ -77,22 +80,21 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if let _ = Auth.auth().currentUser {
-            
+        if let _= Auth.auth().currentUser {
         }
-        
-        //Appdelegateから遷移する時背景色が必要
-        self.view.backgroundColor = UIColor.white
-        
+        self.initializeUI()
+        self.initializeModel()
+    }
+    
+    func initializeUI() {
         // Delegateを自身に設定する
         self.mailField.delegate = self
         // Delegateを自身に設定する
         self.passwordField.delegate = self
-        
+        //Appdelegateから遷移する時背景色が必要
+        self.view.backgroundColor = UIColor.white
         stackView.addArrangedSubview(self.label)
         stackView.addArrangedSubview(self.loginButton)
-        
         // Viewに追加する
         self.view.addSubview(mailField)
         mailField.snp.makeConstraints { (make) -> Void in
@@ -101,7 +103,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(40)
         }
-        
         // Viewに追加する
         self.view.addSubview(passwordField)
         passwordField.snp.makeConstraints { (make) -> Void in
@@ -110,7 +111,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(40)
         }
-        
         // Viewに追加する
         self.view.addSubview(signInButton)
         signInButton.snp.makeConstraints { (make) -> Void in
@@ -119,7 +119,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(40)
         }
-        
         // Viewに追加する
         self.view.addSubview(stackView)
         stackView.snp.makeConstraints { (make) -> Void in
@@ -128,42 +127,21 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(20)
         }
-        
-    }
-    @objc func signUpButtonTapped(sender: AnyObject) {
-        let email = self.mailField.text
-        let password = self.passwordField.text
-        //emailとpasswordでユーザーを作成
-        Auth.auth().createUser(withEmail: email!, password: password!, completion: {(user, error) in
-            print("☆user:",user,"☆error" ,error)
-            if let error = error {
-                if let errCode = AuthErrorCode(rawValue: error._code) {
-                    switch errCode {
-                    case .invalidEmail:
-                        self.showAlert("有効なメールアドレスを入力してください。")
-                    case .emailAlreadyInUse:
-                        self.showAlert("すでに使用中のメールです")
-                    default:
-                        self.showAlert("エラー: \(error.localizedDescription)")
-                    }
-
-                }
-                return
-
-            }
-            self.signIn()
-        })
-
-    }
-    @objc func buttonTapped(sender: AnyObject) {
-        let loginViewController = LoginViewController()
-        self.present(loginViewController, animated: true, completion: nil)
     }
     
-    func showAlert(_ message: String) {
-        let alertController = UIAlertController(title: "お願い", message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "もどる", style: .default, handler: nil))
-        self.present(alertController, animated: true, completion: nil)
+    func initializeModel() {
+        authModel = AuthModel()
+        authModel.delegate = self
+    }
+    
+    @objc func signUpButtonTapped(sender: AnyObject) {
+        let email = self.mailField.text!
+        let password = self.passwordField.text!
+        authModel.signUp(with: email, and: password)
+    }
+    
+    @objc func buttonTapped(sender: AnyObject) {
+        self.tologin()
     }
     
     func signIn() {
@@ -171,9 +149,38 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         self.present(loginViewController, animated: true, completion: nil)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func tologin() {
+        let loginViewController = LoginViewController()
+        self.present(loginViewController, animated: true, completion: nil)
+    }
+    
+    ///多分これ別の所へ
+    func showAlert(_ message: String) {
+        let alertController = UIAlertController(title: "お願い", message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "もどる", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension SignUpViewController: AuthModelDelegate {
+    func errorDidOccur(error: Error) {
+        if let errCode = AuthErrorCode(rawValue: error._code) {
+            switch errCode {
+            case .invalidEmail:
+                self.showAlert("有効なメールアドレスを入力してください。")
+            case .emailAlreadyInUse:
+                self.showAlert("すでに使用中のメールです")
+            default:
+                self.showAlert("エラー: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func didSignUp(newUser: User) {
+        self.authModel.sendEmailVerification(to: newUser)
+    }
+    func emailVerificationDidSend() {
+        self.tologin()
     }
     
     
