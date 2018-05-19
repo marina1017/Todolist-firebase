@@ -10,18 +10,25 @@ import UIKit
 import SnapKit
 
 class ListTableViewCell: UITableViewCell {
-    
     //MARK: Properties
-    var nameLabel: UILabel!
+    var contentLabel: UILabel = {
+        var label = UILabel()
+        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 20)
+        return label
+    }()
+    
+    var postDateLable: UILabel = {
+        var label = UILabel()
+        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 20)
+        return label
+    }()
+    
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.commonInit()
-        
-
-        
     }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -32,25 +39,31 @@ class ListTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.addSubview(nameLabel)
-        nameLabel.snp.makeConstraints { (make) -> Void in
+        self.addSubview(self.contentLabel)
+        self.contentLabel.snp.makeConstraints { (make) -> Void in
             make.top.equalTo(self).offset(20)
             make.left.equalTo(self).inset(20)
             make.right.equalTo(self).inset(20)
             make.height.equalTo(20)
         }
         
+        self.addSubview(self.postDateLable)
+        self.postDateLable.snp.makeConstraints { (make) -> Void in
+            make.top.equalTo(self.contentLabel).offset(20)
+            make.left.equalTo(self).inset(20)
+            make.right.equalTo(self).inset(20)
+            make.height.equalTo(20)
+        }
     }
     
-    //MARK : method
-    private func commonInit() {
-        self.createNameLabel()
-    }
-    private func createNameLabel() {
-        nameLabel = UILabel(frame: CGRect.zero)
-        nameLabel.textAlignment = .left
-        nameLabel.font = UIFont.systemFont(ofSize: 20)
+    func setCellData(date: Date, content: String) {
+        self.postDateLable.text = self.getString(from: date)
+        self.contentLabel.text = content
     }
     
-
+    private func getString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        return formatter.string(from: date)
+    }
 }
