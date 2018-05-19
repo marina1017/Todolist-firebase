@@ -10,6 +10,7 @@
 		9C31BC6220A883E000BE7DBB /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C31BC6120A883E000BE7DBB /* ListViewController.swift */; };
 		9C31BC6420AB129600BE7DBB /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C31BC6320AB129600BE7DBB /* Item.swift */; };
 		9C31BC6620AB1A6500BE7DBB /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C31BC6520AB1A6500BE7DBB /* ListTableViewCell.swift */; };
+		9C31BC6820AF229D00BE7DBB /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C31BC6720AF229D00BE7DBB /* PostViewController.swift */; };
 		9C472BAF20A09B8500B0492D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C472BAE20A09B8400B0492D /* GoogleService-Info.plist */; };
 		9C472BB420A5C4F900B0492D /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C472BB320A5C4F900B0492D /* SignUpViewController.swift */; };
 		9C6949D620A090FB00C33404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6949D520A090FB00C33404 /* AppDelegate.swift */; };
@@ -25,6 +26,7 @@
 		9C31BC6120A883E000BE7DBB /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		9C31BC6320AB129600BE7DBB /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		9C31BC6520AB1A6500BE7DBB /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
+		9C31BC6720AF229D00BE7DBB /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		9C472BAE20A09B8400B0492D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C472BB320A5C4F900B0492D /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		9C6949D220A090FB00C33404 /* Todolist-firebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Todolist-firebase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,6 +89,7 @@
 				9C31BC6120A883E000BE7DBB /* ListViewController.swift */,
 				9C31BC6520AB1A6500BE7DBB /* ListTableViewCell.swift */,
 				9C31BC6320AB129600BE7DBB /* Item.swift */,
+				9C31BC6720AF229D00BE7DBB /* PostViewController.swift */,
 				9C6949D920A090FB00C33404 /* Main.storyboard */,
 				9C6949DC20A090FB00C33404 /* Assets.xcassets */,
 				9C6949DE20A090FB00C33404 /* LaunchScreen.storyboard */,
@@ -244,6 +247,7 @@
 			files = (
 				9C31BC6420AB129600BE7DBB /* Item.swift in Sources */,
 				9C6949D820A090FB00C33404 /* loginViewController.swift in Sources */,
+				9C31BC6820AF229D00BE7DBB /* PostViewController.swift in Sources */,
 				9C6949D620A090FB00C33404 /* AppDelegate.swift in Sources */,
 				9C31BC6220A883E000BE7DBB /* ListViewController.swift in Sources */,
 				9C472BB420A5C4F900B0492D /* SignUpViewController.swift in Sources */,

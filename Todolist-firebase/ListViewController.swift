@@ -66,17 +66,20 @@ class ListViewController: UIViewController {
     }
     
     @objc func pushButton(sender: AnyObject) {
-        let prompt = UIAlertController(title: "To Do App", message: "To Do Item", preferredStyle:.alert)
-        let okAction = UIAlertAction(title: "OK", style: .default){ (action) in
-            let userInput = prompt.textFields![0].text
-            if (userInput!.isEmpty) {
-                return
-            }
-            self.ref.child("users").child(self.user.uid).child("items").childByAutoId().child("title").setValue(userInput)
-        }
-        prompt.addTextField(configurationHandler: nil)
-        prompt.addAction(okAction)
-        present(prompt, animated: true, completion: nil)
+//        let prompt = UIAlertController(title: "To Do App", message: "To Do Item", preferredStyle:.alert)
+//        let okAction = UIAlertAction(title: "OK", style: .default){ (action) in
+//            let userInput = prompt.textFields![0].text
+//            if (userInput!.isEmpty) {
+//                return
+//            }
+//            self.ref.child("users").child(self.user.uid).child("items").childByAutoId().child("title").setValue(userInput)
+//        }
+//        prompt.addTextField(configurationHandler: nil)
+//        prompt.addAction(okAction)
+//        present(prompt, animated: true, completion: nil)
+        let postViewController = PostViewController()
+        let navigationController = UINavigationController(rootViewController: postViewController)
+        self.present(navigationController, animated: true, completion: nil)
     }
     
     //データベースに加えられた変更も検知するリスナーをセット
