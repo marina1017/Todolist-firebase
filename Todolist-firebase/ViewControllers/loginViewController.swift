@@ -11,6 +11,8 @@ import SnapKit
 import FirebaseAuth
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
+    
+    var authModel = AuthModel()
     let mailField: UITextField = {
         //インスタンス作成
         let mailField = UITextField()
@@ -22,7 +24,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         mailField.clearButtonMode = .whileEditing
         return mailField
     }()
-    
     let passwordField: UITextField = {
         //インスタンス作成
         let passwordField = UITextField()
@@ -34,7 +35,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordField.clearButtonMode = .whileEditing
         return passwordField
     }()
-    
     let loginButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.blue
@@ -44,7 +44,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                          for: .touchUpInside)
         return button
     }()
-    
     let label: UILabel = {
         let label = UILabel()
         label.text = "アカウントを持っていない場合"
@@ -61,7 +60,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                          for: .touchUpInside)
         return button
     }()
-    
     let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -76,11 +74,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //FIRAuthは→Authにする
         
         if Auth.auth().currentUser != nil {
-            self.signIn()
+            self.toList()
         } else {
             
         }
-
+        self.initializeUI()
+        self.initializeModel()
+        
+        
+    }
+    func initializeUI() {
         //Appdelegateから遷移する時背景色が必要
         self.view.backgroundColor = UIColor.white
         self.stackView.addArrangedSubview(label)
@@ -89,7 +92,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.mailField.delegate = self
         // Delegateを自身に設定する
         self.passwordField.delegate = self
-
         // Viewに追加する
         self.view.addSubview(mailField)
         mailField.snp.makeConstraints { (make) -> Void in
@@ -98,7 +100,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(40)
         }
-        
         // Viewに追加する
         self.view.addSubview(passwordField)
         passwordField.snp.makeConstraints { (make) -> Void in
@@ -107,7 +108,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(40)
         }
-        
         // Viewに追加する
         self.view.addSubview(loginButton)
         loginButton.snp.makeConstraints { (make) -> Void in
@@ -116,7 +116,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(40)
         }
-        
         // Viewに追加する
         self.view.addSubview(stackView)
         stackView.snp.makeConstraints { (make) -> Void in
@@ -125,59 +124,58 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(20)
         }
-        
     }
-    
+    func initializeModel() {
+        authModel = AuthModel()
+        authModel.delegate = self
+    }
     @objc func loginButtonTapped(sender: AnyObject) {
-        let email = self.mailField.text
-        let password = self.passwordField.text
-        Auth.auth().signIn(withEmail: email!, password: password!, completion: { (user, error) in
-            guard let _ = user else {
-                if let error = error {
-                    if let errCode = AuthErrorCode(rawValue: error._code) {
-                        //ここ公式と異なる 参考(https://code.i-harness.com/ja/q/23b70bf)
-                        switch errCode {
-                        case .invalidEmail:
-                            self.showAlert("User account not found. Try registering")
-                        case .wrongPassword:
-                            self.showAlert("Incorrect username/password combination")
-                        default:
-                            self.showAlert("Error:\(error.localizedDescription)")
-                        }
-                    }
-                    return
-                }
-                //このreturnがいる
-                return assertionFailure("user and error are nil")
-            }
-            self.signIn()
-        })
+        guard let email = self.mailField.text else { return }
+        guard let password = self.passwordField.text else { return }
+        authModel.login(with: email, and: password)
     }
-    
     func showAlert(_ message: String) {
         let alertController = UIAlertController(title: "To Do App", message: message, preferredStyle: UIAlertControllerStyle.alert)
         alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
     }
-    
-    func signIn() {
-        print("signIn")
+    func toList() {
         let listViewController = ListViewController()
         //UINavigationControllerにrootViewControllerにしたい、viewControllerを入れてインスタンスを作成
         let navigationController = UINavigationController(rootViewController: listViewController)
         self.present(navigationController, animated: true, completion: nil)
     }
-    
     @objc func buttonTapped(sender : AnyObject) {
         let signUpViewController = SignUpViewController()
         self.present(signUpViewController, animated: true, completion: nil)
        
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func presentValidateAlert() {
+        let alert = UIAlertController(title: "メール認証", message: "メール認証を行ってください", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
-    
-    
+}
+
+extension LoginViewController: AuthModelDelegate {
+    func errorDidOccur(error: Error) {
+        if let errCode = AuthErrorCode(rawValue: error._code) {
+            //ここ公式と異なる 参考(https://code.i-harness.com/ja/q/23b70bf)
+            switch errCode {
+            case .invalidEmail:
+                self.showAlert("User account not found. Try registering")
+            case .wrongPassword:
+                self.showAlert("Incorrect username/password combination")
+            default:
+                self.showAlert("Error:\(error.localizedDescription)")
+            }
+        }
+    }
+    func didLogIn(isEmailVerified: Bool) {
+        if isEmailVerified {
+            self.toList()
+        } else {
+            self.presentValidateAlert()
+        }
+    }
 }
