@@ -1,5 +1,9 @@
 # 実行から除外するルール
 disabled_rules:
+# コードの記載のない改行を許可したい
+- trailing_whitespace
+# force_cast は場合によっては使用するため
+- force_cast
 # テストコード、Pod等のライブラリは対象外
 excluded:
 - Pods/

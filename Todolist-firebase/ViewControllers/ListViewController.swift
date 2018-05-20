@@ -12,36 +12,25 @@ import Firebase
 
 class ListViewController: UIViewController {
     var tableView = UITableView()
-    
-    let db = Firestore.firestore()
-    
-    var contentArray: [DocumentSnapshot] = []
-    var selectedSnapshot: DocumentSnapshot?
-    
-    var listner: ListenerRegistration?
-    
-//    var user: User!
-//    var items = [Item]()
-//    var ref: DatabaseReference!
-//    private var databaseHandle: DatabaseHandle!
-    
+    let listModel = ListModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initializeTableView()
         self.inittializeUI()
-        self.read()
-        
-        
-//        //ユーザーのログイン時の情報をuserにセット
-//        self.user = Auth.auth().currentUser
-//        //Firebaseデータベースのルート
-//        ref = Database.database().reference()
-//        startObservingDatabase()
+        self.initializeModel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        listModel.selectedSnapshot = nil
+    }
+    @objc func pushButton(sender: AnyObject) {
+        self.toPost()
+    }
+    func initializeModel() {
+        self.listModel.delegate = self
+        self.listModel.read()
     }
     
     func initializeTableView(){
@@ -65,47 +54,6 @@ class ListViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = editButtonItem
     }
     
-    func read() {
-        //オフライン データをリッスンする
-        //https://firebase.google.com/docs/firestore/manage-data/enable-offline?hl=ja
-        //Query.onSnapshot（）で使用してスナップショットリスナの動作を制御するためのオプション。
-        let options = QueryListenOptions()
-        //fromCache 値を使用する場合には、リッスン ハンドラを接続するときに includeMetadataChanges リッスン オプションを指定します。
-        //FIRQuerySnapshot.metadataが更新された場合スナップショットイベントをおこすかデフォルトはFalse
-        options.includeQueryMetadataChanges(true)
-        
-        //このへんよくわからない
-        listner = db.collection("posts").order(by: "date")
-            .addSnapshotListener(options: options) { [unowned self] snapshot, error in
-                guard let snap = snapshot else {
-                    print("Error fetching document: \(error!)")
-                    return
-                }
-                for diff in snap.documentChanges {
-                    if diff.type == .added {
-                        print("New data: \(diff.document.data())")
-                    }
-                }
-                print("Current data: \(snap)")
-                self.reload(with: snap)
-        }
-    }
-    
-    func reload(with snap: QuerySnapshot) {
-        if !snap.isEmpty {
-            contentArray.removeAll()
-            for item in snap.documents {
-                contentArray.append(item)
-            }
-            self.tableView.reloadData()
-        }
-    }
-    
-    func delete(deleteIndexPath indexPath: IndexPath) {
-        db.collection("posts").document(contentArray[indexPath.row].documentID).delete()
-        contentArray.remove(at: indexPath.row)
-    }
-    
     @objc func didTapSignOut(sender: AnyObject) {
         do {
             //FIRAuth→Auth
@@ -119,46 +67,28 @@ class ListViewController: UIViewController {
     func toPost() {
         let postViewController = PostViewController()
         let navigationController = UINavigationController(rootViewController: postViewController)
-        self.present(navigationController, animated: true, completion: nil)
+        //行き先のviewControllerを示す
+        if let snap = listModel.selectedSnapshot {
+            let postModel = PostModel(with:
+                Post(
+                    id: snap.documentID,
+                    user: snap["user"] as! String,
+                    content: snap["content"] as! String,
+                    date: snap["date"] as! Date
+                )
+            )
+            postViewController.postModel = postModel
+        }
+        self.present(navigationController, animated: true)
+    }
+}
+extension ListViewController: ListModelDelegate {
+    func listDidChange() {
+        self.tableView.reloadData()
     }
     
-    @objc func pushButton(sender: AnyObject) {
-//        let prompt = UIAlertController(title: "To Do App", message: "To Do Item", preferredStyle:.alert)
-//        let okAction = UIAlertAction(title: "OK", style: .default){ (action) in
-//            let userInput = prompt.textFields![0].text
-//            if (userInput!.isEmpty) {
-//                return
-//            }
-//            self.ref.child("users").child(self.user.uid).child("items").childByAutoId().child("title").setValue(userInput)
-//        }
-//        prompt.addTextField(configurationHandler: nil)
-//        prompt.addAction(okAction)
-//        present(prompt, animated: true, completion: nil)
-        selectedSnapshot = nil
-        self.toPost()
-    }
-    
-    //データベースに加えられた変更も検知するリスナーをセット
-    //初期値取得のために一度呼び出されデータに変更がある度に呼ばれる
-//    func startObservingDatabase() {
-//        //.value
-//        //FIRDataEventTypeValue：そのパスにあるコンテンツ全体の変更の検知と読み取りをする
-//        //FIRDataEventTypeValueイベントは参照するデータベースのデータが変更されると、子要素の変更も含めて毎回実行される
-//        databaseHandle = ref.child("users/\(self.user.uid)/items").observe(.value, with: { (snapshot) in
-//            var newItems = [Item]()
-//            for ItemSnapShot in snapshot.children {
-//                if let itemSnapShot = ItemSnapShot as? DataSnapshot {
-//                    let item = Item(snapshot: itemSnapShot)
-//                    newItems.append(item)
-//                }
-//            }
-//            self.items = newItems
-//            self.tableView.reloadData()
-//        })
-//    }
-    
-    deinit {
-        //ref.child("users/\(self.user.uid)/items").removeObserver(withHandle: databaseHandle)
+    func errorDidOccur(error: Error) {
+        print(error.localizedDescription)
     }
 }
 
@@ -169,17 +99,16 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
-    
     //行数 セクションによって行数が違う場合はsectionで場合分けをするUITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contentArray.count
+        return listModel.contentArray.count
     }
     //列ごとに表示するセルを決めるデリゲートメソッド
     //UITableViewDataSource は主に Table View が表示するデータを与えるものです。
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(ListTableViewCell.self), for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
         
-        let content = contentArray[indexPath.row]
+        let content = listModel.contentArray[indexPath.row]
         let date = content["date"] as! Date // swiftlint:disable:this force_cast
         cell.setCellData(date: date, content: String(describing: content["content"]!))
         return cell
@@ -191,15 +120,16 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.selectedSnapshot = contentArray[indexPath.row]
+        //セルの選択解除
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        listModel.selectedSnapshot = listModel.contentArray[indexPath.row]
         self.toPost()
     }
-    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            self.delete(deleteIndexPath: indexPath)
+            listModel.delete(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
         }
     }
-
 }

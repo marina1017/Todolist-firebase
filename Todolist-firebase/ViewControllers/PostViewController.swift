@@ -11,7 +11,6 @@ import UIKit
 import Firebase
 
 class PostViewController: UIViewController {
-    
     var postModel: PostModel!
     let label: UILabel = {
         let label = UILabel()
@@ -21,7 +20,7 @@ class PostViewController: UIViewController {
     let postButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.blue
-        button.setTitle("ログイン", for: UIControlState.normal)
+        button.setTitle("登録", for: UIControlState.normal)
         button.addTarget(self,
                          action: #selector(PostViewController.postButtonTapped(sender:)),
                          for: .touchUpInside)
@@ -31,7 +30,7 @@ class PostViewController: UIViewController {
         //インスタンス作成
         let mailField = UITextField()
         // 表示する文字を代入する.
-        mailField.placeholder = "mailField"
+        mailField.placeholder = "メールする"
         // 枠を表示する.
         mailField.borderStyle = .roundedRect
         // クリアボタンを追加.
@@ -49,8 +48,6 @@ class PostViewController: UIViewController {
         
         if let post = postModel.selectedPost {
             textField.text = post.content
-            //
-            //textField.text = snapshot["content"] as? String
         }
     }
     @objc func postButtonTapped(sender: UIButton) {
