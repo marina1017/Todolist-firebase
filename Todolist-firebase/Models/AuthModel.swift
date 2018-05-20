@@ -39,5 +39,18 @@ class AuthModel {
             self.delegate?.emailVerificationDidSend?()
         }
     }
+    func login(with email: String, and password: String) {
+        Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
+            guard let _ = user else {
+                if let error = error {
+                    self.delegate?.errorDidOccur(error: error)
+                    return
+                }
+                return
+            }
+            guard let user = user else {return}
+            self.delegate?.didLogIn?(isEmailVerified: user.isEmailVerified)
+        })
+    }
     
 }
