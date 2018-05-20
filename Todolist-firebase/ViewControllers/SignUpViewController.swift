@@ -80,7 +80,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let _= Auth.auth().currentUser {
+        if let _ = Auth.auth().currentUser {
         }
         self.initializeUI()
         self.initializeModel()
@@ -135,8 +135,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func signUpButtonTapped(sender: AnyObject) {
-        let email = self.mailField.text!
-        let password = self.passwordField.text!
+        guard let email = self.mailField.text else { return }
+        guard let password = self.passwordField.text else { return }
         authModel.signUp(with: email, and: password)
     }
     
