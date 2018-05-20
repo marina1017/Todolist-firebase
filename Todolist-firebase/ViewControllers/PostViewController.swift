@@ -11,17 +11,13 @@ import UIKit
 import Firebase
 
 class PostViewController: UIViewController {
-    //データベースの設定
-    let db = Firestore.firestore()
     
-    var selectedSnapShot: DocumentSnapshot?
-
+    var postModel: PostModel!
     let label: UILabel = {
         let label = UILabel()
         label.text = "todoリスト"
         return label
     }()
-
     let postButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.blue
@@ -31,7 +27,6 @@ class PostViewController: UIViewController {
                          for: .touchUpInside)
         return button
     }()
-
     let textField: UITextField = {
         //インスタンス作成
         let mailField = UITextField()
@@ -46,62 +41,37 @@ class PostViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.inittializeUI()
+        self.initializeUI()
+        self.initializeModel()
     }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let snapshot = self.selectedSnapShot {
-            textField.text = snapshot["content"] as? String
+        if let post = postModel.selectedPost {
+            textField.text = post.content
+            //
+            //textField.text = snapshot["content"] as? String
         }
     }
-    
     @objc func postButtonTapped(sender: UIButton) {
-        if self.selectedSnapShot != nil {
-            self.update()
-            
-        } else {
-            self.create()
-        }
+        guard let content = textField.text else { return }
+        postModel.post(with: content)
     }
-    
-    func update() {
-        self.db.collection("posts").document(selectedSnapShot!.documentID).updateData([
-            "content": self.textField.text!,
-            "date": Date()
-        ]){ [unowned self] error in
-            if let e = error {
-                print("Error adding document: \(e)")
-                return
-            }
-            print("Document updated")
-            
-        }
+    @objc func closeButton(sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
-    
-    func create() {
-        guard let text = self.textField.text else { return }
-        
-        db.collection("posts").addDocument(data: [
-            "user": (Auth.auth().currentUser?.uid),
-            "content": text,
-            "date": Date()
-        ]){ [unowned self] error in
-            if let e = error {
-                print("Error adding document: \(e))")
-                return
-            }
-            print("Document added")
-            
-        }
-        self.dismiss(animated: true, completion: nil)
+    func showAlert(_ message: String) {
+        let alertController = UIAlertController(title: "To Do App", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
-    
-    
-    
-    func inittializeUI() {
+    func initializeModel() {
+        if postModel == nil {
+            postModel = PostModel()
+        }
+        postModel.delegate = self
+    }
+    func initializeUI() {
         self.textField.delegate = self
         self.view.backgroundColor = UIColor.white
         // タイトルをセット
@@ -116,7 +86,6 @@ class PostViewController: UIViewController {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(40)
         }
-        
         // Viewに追加する
         self.view.addSubview(self.textField)
         self.textField.snp.makeConstraints { (make) -> Void in
@@ -125,7 +94,6 @@ class PostViewController: UIViewController {
             make.right.equalTo(self.view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(40)
         }
-        
         // Viewに追加する
         self.view.addSubview(self.postButton)
         self.postButton.snp.makeConstraints { (make) -> Void in
@@ -135,9 +103,25 @@ class PostViewController: UIViewController {
             make.height.equalTo(40)
         }
     }
-    
-    @objc func closeButton(sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
+}
+
+extension PostViewController: PostModelDelegate {
+    func didPost() {
+        print("Document added")
+        dismiss(animated: true, completion: nil)
+    }
+    func errorDidOccur(error: Error) {
+        if let errCode = AuthErrorCode(rawValue: error._code) {
+            //ここ公式と異なる 参考(https://code.i-harness.com/ja/q/23b70bf)
+            switch errCode {
+            case .invalidEmail:
+                self.showAlert("User account not found. Try registering")
+            case .wrongPassword:
+                self.showAlert("Incorrect username/password combination")
+            default:
+                self.showAlert("Error:\(error.localizedDescription)")
+            }
+        }
     }
 }
 
